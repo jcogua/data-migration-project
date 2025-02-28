@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Juan Pérez",
+        "datetime": "2023-10-01T08:00:00Z",
+        "department_id": 1,
+        "job_id": 101
+    },
+    {
+        "name": "María Gómez",
+        "datetime": "2023-10-02T09:15:00Z",
+        "department_id": 2,
+        "job_id": 102
+    },
+    {
+        "name": "Carlos López",
+        "datetime": "2023-10-03T10:30:00Z",
+        "department_id": 3,
+        "job_id": 103
+    },
+    {
+        "name": "Ana Martínez",
+        "datetime": "2023-10-04T11:45:00Z",
+        "department_id": 1,
+        "job_id": 104
+    },
+    {
+        "name": "Luis Rodríguez",
+        "datetime": "2023-10-05T12:00:00Z",
+        "department_id": 2,
+        "job_id": 105
+    },
+    {
+        "name": "Sofía Fernández",
+        "datetime": "2023-10-06T13:20:00Z",
+        "department_id": 3,
+        "job_id": 106
+    },
+    {
+        "name": "Pedro Sánchez",
+        "datetime": "2023-10-07T14:35:00Z",
+        "department_id": 1,
+        "job_id": 107
+    },
+    {
+        "name": "Laura Díaz",
+        "datetime": "2023-10-08T15:50:00Z",
+        "department_id": 2,
+        "job_id": 108
+    },
+    {
+        "name": "Jorge Ruiz",
+        "datetime": "2023-10-09T16:05:00Z",
+        "department_id": 3,
+        "job_id": 109
+    },
+    {
+        "name": "Marta Hernández",
+        "datetime": "2023-10-10T17:10:00Z",
+        "department_id": 1,
+        "job_id": 110
+    }
+]
