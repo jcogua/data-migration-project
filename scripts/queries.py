@@ -42,8 +42,8 @@ def hired_employees_by_quarter():
             .join(Department, Department.id == HiredEmployee.department_id)
             .join(Job, Job.id == HiredEmployee.job_id)
             .filter(func.extract('year', cast(HiredEmployee.datetime, TIMESTAMP)) == 2021)
-            .group_by(Department.department, HiredEmployee.job_id)
-            .order_by(Department.department, HiredEmployee.job_id)
+            .group_by(Department.department, Job.job)
+            .order_by(Department.department, Job.job)
             .all()
         )
         session.close()
@@ -52,7 +52,7 @@ def hired_employees_by_quarter():
         result = [
             {
                 "department": row[0],
-                "job_id": row[1],
+                "job": row[1],
                 "Q1": row[2],
                 "Q2": row[3],
                 "Q3": row[4],
