@@ -48,7 +48,6 @@ def hired_employees_by_quarter():
         )
         session.close()
         
-        # Convertir el resultado en una lista de diccionarios
         result = [
             {
                 "department": row[0],
@@ -74,7 +73,7 @@ def departments_above_average():
                 HiredEmployee.department_id,
                 func.count(HiredEmployee.id).label("total_hires")
             )
-            .filter(func.strftime('%Y', HiredEmployee.datetime) == '2021')
+            .filter(func.extract('year', cast(HiredEmployee.datetime, TIMESTAMP)) == 2021) 
             .group_by(HiredEmployee.department_id)
             .subquery()
         )
