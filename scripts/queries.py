@@ -1,5 +1,6 @@
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import func, case
+from sqlalchemy import func, case, cast
+from sqlalchemy.types import TIMESTAMP
 from database import engine, Session
 from models import HiredEmployee, Department, Job
 from fastapi import HTTPException
