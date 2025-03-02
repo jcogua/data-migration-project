@@ -29,6 +29,7 @@ Base.metadata.create_all(engine)
 app = FastAPI()
 
 @app.get("/")
+@app.head("/")
 def root():
     logger.info("Root endpoint accessed")
     return {"message": "API running correctly"}
