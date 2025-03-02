@@ -16,25 +16,25 @@ def hired_employees_by_quarter():
                 Job.job,
                 func.sum(
                     case(
-                        (func.extract('month', HiredEmployee.datetime) >= 1, 1),
+                        (func.extract('month', cast(HiredEmployee.datetime, TIMESTAMP)) >= 1, 1),
                         else_=0
                     )
                 ).label("Q1"),
                 func.sum(
                     case(
-                        (func.extract('month', HiredEmployee.datetime) >= 4, 1),
+                        (func.extract('month', cast(HiredEmployee.datetime, TIMESTAMP)) >= 4, 1),
                         else_=0
                     )
                 ).label("Q2"),
                 func.sum(
                     case(
-                        (func.extract('month', HiredEmployee.datetime) >= 7, 1),
+                        (func.extract('month', cast(HiredEmployee.datetime, TIMESTAMP)) >= 7, 1),
                         else_=0
                     )
                 ).label("Q3"),
                 func.sum(
                     case(
-                        (func.extract('month', HiredEmployee.datetime) >= 10, 1),
+                        (func.extract('month', cast(HiredEmployee.datetime, TIMESTAMP)) >= 10, 1),
                         else_=0
                     )
                 ).label("Q4"),
@@ -48,7 +48,7 @@ def hired_employees_by_quarter():
         )
         session.close()
         
-        # result into a list of dict
+        # Convertir el resultado en una lista de diccionarios
         result = [
             {
                 "department": row[0],
