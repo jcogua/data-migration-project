@@ -12,16 +12,20 @@ def store_results_in_db(table_name, data, columns):
             print(f"Processing table: {table_name}")
             
             columns = [col.lower() for col in columns]
-
+            
             data = [{k.lower(): v for k, v in row.items()} for row in data]
             
             # Check if the table exists and drop it if necessary
             if table_name in metadata.tables:
                 print(f"Dropping existing table: {table_name}")
-                session.execute(text(f'DROP TABLE IF EXISTS {table_name} CASCADE'))
-                session.commit()
+                table = metadata.tables[table_name]
+                table.drop(engine) 
+                metadata.reflect(bind=engine)  # Refresh metadata
             
-            # Create the table with correct columns
+            # Ensure 'id' column is not duplicated
+            if "id" in columns:
+                columns.remove("id")
+            
             print(f"Creating table: {table_name}")
             table = Table(
                 table_name,
@@ -30,7 +34,7 @@ def store_results_in_db(table_name, data, columns):
                 *(Column(col, Integer) if isinstance(data[0].get(col, ""), int) else Column(col, String) for col in columns),
             )
             metadata.create_all(engine)
-            metadata.reflect(bind=engine)
+            metadata.reflect(bind=engine)  # Refresh metadata
             
             # Insert the new data using individual execution
             columns_str = ', '.join(columns)
