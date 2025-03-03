@@ -15,6 +15,7 @@ from auth import validate_api_key
 from scripts.queries import hired_employees_by_quarter, departments_above_average
 from models import EmployeeCreate, DepartmentCreate, JobCreate
 from logger import logger
+from store_results import store_results_in_db
 
 from crud import (
     create_employee, get_employee, get_all_employees, update_employee, delete_employee,
@@ -316,6 +317,7 @@ def get_hired_employees_by_quarter_endpoint():
     logger.info("Generating hired employees by quarter report")
     try:
         result = hired_employees_by_quarter()
+        store_results_in_db("hired_employees_by_quarter", result, result[0].keys())
         logger.debug("Report generated successfully")
         return result
     except Exception as e:
@@ -327,6 +329,7 @@ def get_departments_above_average_endpoint():
     logger.info("Generating departments above average report")
     try:
         result = departments_above_average()
+        store_results_in_db("departments_above_average", result, result[0].keys())
         logger.debug("Report generated successfully")
         return result
     except Exception as e:
