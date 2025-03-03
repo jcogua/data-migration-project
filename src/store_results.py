@@ -11,24 +11,25 @@ def store_results_in_db(table_name, data, columns):
         try:
             print(f"Processing table: {table_name}")
             
+        
             columns = [col.lower() for col in columns]
             
-            # Check again if the table exists
+            # Check if the table exists and drop it if necessary
             if table_name in metadata.tables:
-                print(f"Truncating existing table: {table_name}")
-                session.execute(text(f'TRUNCATE TABLE {table_name} RESTART IDENTITY'))
-            else:
-                print(f"Creating table: {table_name}")
-                # Create the table if it does not exist
-                table = Table(
-                    table_name,
-                    metadata,
-                    Column("id", Integer, primary_key=True, autoincrement=True),
-                    *(Column(col.lower(), String if isinstance(val, str) else Integer) for col, val in data[0].items()),
-                    extend_existing=True
-                )
-                metadata.create_all(engine)
-                metadata.reflect(bind=engine)  # Refresh metadata after creating the table
+                print(f"Dropping existing table: {table_name}")
+                session.execute(text(f'DROP TABLE IF EXISTS {table_name} CASCADE'))
+                session.commit()
+            
+            # Create the table 
+            print(f"Creating table: {table_name}")
+            table = Table(
+                table_name,
+                metadata,
+                Column("id", Integer, primary_key=True, autoincrement=True),
+                *(Column(col, Integer) if isinstance(data[0][col], int) else Column(col, String) for col in columns),
+            )
+            metadata.create_all(engine)
+            metadata.reflect(bind=engine) 
             
             # Insert the new data using individual execution
             columns_str = ', '.join(columns)
@@ -36,7 +37,7 @@ def store_results_in_db(table_name, data, columns):
             insert_query = text(f'INSERT INTO {table_name} ({columns_str}) VALUES ({values_str})')
             
             for row in data:
-                row = {k.lower(): v for k, v in row.items()}  # Convert row keys to lowercase
+                row = {k.lower(): v for k, v in row.items()} 
                 session.execute(insert_query, row)
             
             session.commit()
