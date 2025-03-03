@@ -11,8 +11,9 @@ def store_results_in_db(table_name, data, columns):
         try:
             print(f"Processing table: {table_name}")
             
-        
             columns = [col.lower() for col in columns]
+            
+            data = [{k.lower(): v for k, v in row.items()} for row in data]
             
             # Check if the table exists and drop it if necessary
             if table_name in metadata.tables:
@@ -20,13 +21,12 @@ def store_results_in_db(table_name, data, columns):
                 session.execute(text(f'DROP TABLE IF EXISTS {table_name} CASCADE'))
                 session.commit()
             
-            # Create the table 
             print(f"Creating table: {table_name}")
             table = Table(
                 table_name,
                 metadata,
                 Column("id", Integer, primary_key=True, autoincrement=True),
-                *(Column(col, Integer) if isinstance(data[0][col], int) else Column(col, String) for col in columns),
+                *(Column(col, Integer) if isinstance(data[0].get(col, ""), int) else Column(col, String) for col in columns),
             )
             metadata.create_all(engine)
             metadata.reflect(bind=engine) 
@@ -37,7 +37,6 @@ def store_results_in_db(table_name, data, columns):
             insert_query = text(f'INSERT INTO {table_name} ({columns_str}) VALUES ({values_str})')
             
             for row in data:
-                row = {k.lower(): v for k, v in row.items()} 
                 session.execute(insert_query, row)
             
             session.commit()
