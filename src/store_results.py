@@ -35,7 +35,7 @@ def store_results_in_db(table_name, data, columns):
                     extend_existing=True
                 )
                 metadata.create_all(engine)
-                metadata.reflect(bind=engine)  # Refresh metadata after creating the table
+                metadata.reflect(bind=engine)
             
             # Insert the new data using individual execution
             columns_str = ', '.join(columns)
