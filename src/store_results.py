@@ -11,27 +11,31 @@ def store_results_in_db(table_name, data, columns):
         try:
             print(f"Processing table: {table_name}")
             
+            # Convert column names to lowercase to match PostgreSQL behavior
             columns = [col.lower() for col in columns]
             
+            # Convert data keys to lowercase to ensure consistency
             data = [{k.lower(): v for k, v in row.items()} for row in data]
             
             # Check if the table exists and drop it if necessary
             if table_name in metadata.tables:
                 print(f"Dropping existing table: {table_name}")
                 table = metadata.tables[table_name]
-                table.drop(engine) 
+                table.drop(engine)  # Properly drop the table using SQLAlchemy
                 metadata.reflect(bind=engine)  # Refresh metadata
             
             # Ensure 'id' column is not duplicated
             if "id" in columns:
                 columns.remove("id")
             
+            # Create the table with correct columns
             print(f"Creating table: {table_name}")
             table = Table(
                 table_name,
                 metadata,
                 Column("id", Integer, primary_key=True, autoincrement=True),
                 *(Column(col, Integer) if isinstance(data[0].get(col, ""), int) else Column(col, String) for col in columns),
+                extend_existing=True  # Allow redefinition if necessary
             )
             metadata.create_all(engine)
             metadata.reflect(bind=engine)  # Refresh metadata
